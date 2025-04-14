@@ -1,0 +1,41 @@
+﻿<div class="container">
+    <div class="card">
+        <div class="card-body">
+            <table class="table table-light table-striped table-hover">
+                <thead class="">
+                  <tr>
+                    <th>#</th>
+                    <th>By</th>
+                    <th>Descendants</th>
+                    <th>Score</th>
+                    <th>Time</th>
+                    <th>Title</th>
+                    <th>Type</th>
+                    <th>URL</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of stories">
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.by }}</td>
+                    <td>{{ item.descendants }}</td>
+                    <td>{{ item.score }}</td>
+                    <td>{{ item.time | date:'short' }}</td>
+                    <td>{{ item.title }}</td>
+                    <td>{{ item.type }}</td>
+                    <td><a href="{{ item.url }}" target="_blank">{{ item.url }}</a></td>
+                  </tr>
+                </tbody>
+              </table>
+              
+              <pagination
+                [totalItems]="stories.length"
+                [(ngModel)]="currentPage"
+                [itemsPerPage]="itemsPerPage"
+                (pageChanged)="pageChanged($event)"
+                class="d-flex justify-content-center">
+              </pagination>
+        </div>
+    </div>
+</div>
+
