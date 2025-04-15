@@ -5,6 +5,7 @@ using NextTech.Server.Models;
 using NextTech.Server.Services;
 using System.Text.Json;
 using System.Net;
+using Microsoft.Extensions.Configuration;
 
 namespace NextTech.Tests
 {
@@ -13,6 +14,7 @@ namespace NextTech.Tests
         private readonly Mock<HttpMessageHandler> _mockHttpMessageHandler;
         private readonly HttpClient _httpClient;
         private readonly StoryService _storyService;
+        private readonly IConfiguration configuration;
 
         public StoryServiceTests()
         {
@@ -27,7 +29,7 @@ namespace NextTech.Tests
             };
 
             // Initialize StoryService with mocked HttpClient and in-memory cache
-            _storyService = new StoryService(_httpClient, memoryCache);
+            _storyService = new StoryService(_httpClient, memoryCache, configuration);
         }
 
         [Fact]

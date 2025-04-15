@@ -3,6 +3,7 @@ using System.Net;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NextTech.Server.Models;
 using NextTech.Server.Services;
@@ -12,6 +13,7 @@ namespace NextTech.IntegrationTests
     public class IntegrationTests : IClassFixture<WebApplicationFactory<Program>>
     {
         private readonly WebApplicationFactory<Program> _factory;
+        private readonly IConfiguration _configuration;
         public IntegrationTests(WebApplicationFactory<Program> factory)
         {
             _factory = factory.WithWebHostBuilder(builder =>
@@ -51,7 +53,7 @@ namespace NextTech.IntegrationTests
                     services.AddScoped<IStoryService>(provider =>
                     {
                         var cache = provider.GetRequiredService<IMemoryCache>();
-                        return new StoryService(httpClient, cache);
+                        return new StoryService(httpClient, cache, _configuration);
                     });
                 });
             });
@@ -95,7 +97,7 @@ namespace NextTech.IntegrationTests
             var memoryCache = new MemoryCache(new MemoryCacheOptions());
 
             // Instantiate your service with the mocked HttpClient and MemoryCache
-            var storyService = new StoryService(httpClient, memoryCache);
+            var storyService = new StoryService(httpClient, memoryCache, _configuration);
 
             // Act & Assert: Since your service wraps exceptions, we check for ApplicationException.
             var exception = await Assert.ThrowsAsync<ApplicationException>(async () => await storyService.Get());
