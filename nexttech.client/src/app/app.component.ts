@@ -1,16 +1,13 @@
 
 
-import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component } from '@angular/core';
 import { CommonModule, DecimalPipe } from '@angular/common';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { PageChangedEvent, PaginationModule } from 'ngx-bootstrap/pagination';
 import { StoryService } from './services/story.service';
 import { Story } from './models/story.model';
-import { HttpClient, HttpClientModule, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -29,38 +26,62 @@ import { HttpClient, HttpClientModule, provideHttpClient, withInterceptorsFromDi
   ]
 })
 
-export class AppComponent implements OnInit {
+export class AppComponent {
+  stories:Story[] = [];
+  currentPage = 1;
+  itemsPerPage = 10; 
+  searchTerm: string = '';
+  filteredStories: any[] = [];
+  loading = true;
 
-  constructor(private storyService: StoryService){
+  constructor(private storyService: StoryService, private httpClient: HttpClient) {
+    this.fetchStories();
+  }
+
+  fetchStories(){
+    this.loading = true;
     this.storyService.GetStories().subscribe({
       next: (data) => {
         this.stories = data;
-        console.log(this.stories);
+        this.filteredStories = data; // Initialize filteredStories with all stories
+        this.loading = false;
       },
-      error: (error) => console.log(error)
-    })
+      error: (error) => 
+      {
+        console.error('Error fetching stories:', error);
+        this.loading = false;
+      }
+     })
   }
 
-  stories:Story[] = [];
-  
-  currentPage = 1;
-  itemsPerPage = 10; // default 10 per page
-
-  // Get the paginated slice of data
   get paginatedData() {
     const start = (this.currentPage - 1) * this.itemsPerPage;
-    return this.stories.slice(start, start + this.itemsPerPage);
+    const end = start + this.itemsPerPage;
+    return this.filteredStories.slice(start, end);
   }
 
-  // Handle page change event
   pageChanged(event: any) {
     this.currentPage = event.page;
-    this.itemsPerPage = event.itemsPerPage ?? this.itemsPerPage; 
-    // (some pagination components emit itemsPerPage if it's changeable by the user)
   }
 
-  ngOnInit(): void {
+  pageSizeChanged(event: any) {
+    this.itemsPerPage = +event.target.value;
+    this.currentPage = 1;
+  }
   
-  }
+  onSearchTermChanged(event: any) {
+    this.searchTerm = event.target.value.toLowerCase();
 
+    if(this.searchTerm !== '') {
+      this.filteredStories = this.stories.filter(story => 
+        story.title.toLowerCase().includes(this.searchTerm) ||
+        story.url.toLowerCase().includes(this.searchTerm)
+      );
+    
+      this.currentPage = 1; // reset back to first page
+    }
+    else{
+      this.filteredStories = this.stories;
+    }
+  }
 }

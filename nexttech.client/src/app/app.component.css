@@ -4,11 +4,12 @@
     text-align: center;
 }
 
-th, td {
-    padding-left: 1rem;
-    padding-right: 1rem;
+
+table.datatables {
+    table-layout: fixed !important;
+    border-collapse: collapse !important;
+    transition: transform 2s ease-in-out;
+    text-align: left;
+    white-space: nowrap;
 }
 
-table {
-    margin: 0 auto;
-}

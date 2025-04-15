@@ -1,40 +1,52 @@
 ﻿<div class="container">
     <div class="card">
+      <div class="card-body">    
+        <div class="d-flex align-items-center pl-4">
+          <div>
+            <input type="text" name="searchTerm" class="form-control" placeholder="Search..."  (input)="onSearchTermChanged($event)"/>
+          </div>
+          <div class="flex-grow-1"></div>
+          <button class="btn btn-secondary" style="margin-right:.5em" (click)="fetchStories()">&#x21bb;</button>
+          <div class="flex-shrink-0 d-flex">
+            <select name="pageSize" class="form-select" (change)="pageSizeChanged($event)" [ariaPlaceholder]="'Page Size'">
+              <option [ngValue]="10">10</option>
+              <option [ngValue]="25">25</option>
+              <option [ngValue]="50">50</option>
+              <option [ngValue]="100">100</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
         <div class="card-body">
-            <table class="table table-light table-striped table-hover">
-                <thead class="">
-                  <tr>
-                    <th>#</th>
-                    <th>By</th>
-                    <th>Descendants</th>
-                    <th>Score</th>
-                    <th>Time</th>
-                    <th>Title</th>
-                    <th>Type</th>
-                    <th>URL</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let item of stories">
-                    <td>{{ item.id }}</td>
-                    <td>{{ item.by }}</td>
-                    <td>{{ item.descendants }}</td>
-                    <td>{{ item.score }}</td>
-                    <td>{{ item.time | date:'short' }}</td>
-                    <td>{{ item.title }}</td>
-                    <td>{{ item.type }}</td>
-                    <td><a href="{{ item.url }}" target="_blank">{{ item.url }}</a></td>
-                  </tr>
-                </tbody>
-              </table>
-              
-              <pagination
-                [totalItems]="stories.length"
-                [(ngModel)]="currentPage"
-                [itemsPerPage]="itemsPerPage"
-                (pageChanged)="pageChanged($event)"
-                class="d-flex justify-content-center">
-              </pagination>
+          <h5>{{loading ? 'loading....' : 'Newest Stories'}}</h5>
+          <div class="table-responsive">
+            <table class="table table-light table-striped table-hover table-bordered datatables mt-3">
+              <thead class="">
+                <tr>
+                  <th>Title</th>
+                  <th>URL</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of paginatedData">
+                  <td>{{ item.title }}</td>
+                  <td><a href="{{ item.url }}" target="_blank">{{ item.url }}</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <pagination
+          [totalItems]="filteredStories.length"
+          [(ngModel)]="currentPage"
+          [itemsPerPage]="itemsPerPage"
+          (pageChanged)="pageChanged($event)"
+          [maxSize]="5"
+          [boundaryLinks]="true"
+          class="d-flex justify-content-center mt-3">
+        </pagination>
+      
         </div>
     </div>
 </div>

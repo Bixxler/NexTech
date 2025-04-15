@@ -1,76 +1,38 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
 using System.Text.Json;
-using NextTech.Data;
+using NextTech;
+using System.Reflection.Metadata.Ecma335;
+using NextTech.Server.Services;
 
 namespace NextTech.Server.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("[controller]")]
 public class StoriesController : ControllerBase
 {
 
     private readonly ILogger<StoriesController> _logger;
+    private readonly IStoryService _storyService;
 
-    public StoriesController(ILogger<StoriesController> logger)
+    public StoriesController(ILogger<StoriesController> logger, IStoryService storyService)
     {
+        _storyService = storyService;
         _logger = logger;
     }
 
-    private static HttpClient sharedClient = new()
+
+    [HttpGet(Name = "GetStories")]
+    public async Task<IActionResult> Get()
     {
-        BaseAddress = new Uri("https://hacker-news.firebaseio.com/v0/"),
-        //https://hacker-news.firebaseio.com/v0/newstories.json
-        //https://hacker-news.firebaseio.com/v0/item/{storyId}.json
 
-    };
+        var stories = await _storyService.Get();
 
-    [HttpGet("NewStories")]
-    public async Task<IActionResult> GetNewStories()
-    {
-        var newStoriesUrl = "https://hacker-news.firebaseio.com/v0/newstories.json";
-        var idsResponse = await sharedClient.GetStringAsync(newStoriesUrl);
-
-        var ids = JsonSerializer.Deserialize<List<int>>(idsResponse);
-
-        if (ids == null || !ids.Any())
-            return NoContent();
-
-        var tasks = ids.Take(50) // limit how many you load at once (optional)
-            .Select(id => GetStoryById(id));
-
-        var stories = await Task.WhenAll(tasks);
-
-        var validStories = stories
-            .Where(story => story != null && !string.IsNullOrEmpty(story.Url))
-            .ToList();
-
-        return Ok(validStories);
-    }
-
-
-    [HttpGet("GetById")]
-    public async Task<Story> GetStoryById(int id)
-    {
-        try
+        if(stories == null)
         {
-            var storyUrl = $"https://hacker-news.firebaseio.com/v0/item/{id}.json";
-            var response = await sharedClient.GetAsync(storyUrl);
-
-            if (!response.IsSuccessStatusCode)
-                return null;
-
-            var storyResponse = await response.Content.ReadAsStringAsync();
-            var story = JsonSerializer.Deserialize<Story>(storyResponse);
-
-            if (story == null || story.Type != "story" || string.IsNullOrEmpty(story.Url))
-                return null;
-
-            return story;
+            return NotFound();
         }
-        catch
-        {
-            return null;
-        }
+
+        return Ok(stories);
     }
 }
