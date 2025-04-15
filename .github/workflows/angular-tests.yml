@@ -1,33 +1,26 @@
-name Angular Tests
+name: Angular Tests
 
-on
-  push
-    branches [dev]
-  pull_request
-    branches [dev]
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [dev]
 
-jobs
-  test
-    runs-on ubuntu-latest
+jobs:
+  test:
+    runs-on: ubuntu-latest
 
-    steps
-    - name Checkout code
-      uses actionscheckout@v3
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-    - name Setup Node.js
-      uses actionssetup-node@v3
-      with
-        node-version '18'
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
-    - name Install dependencies
-      run npm ci
+      - name: Install dependencies
+        run: npm install
 
-    - name Run Angular unit tests
-      run npm run test -- --watch=false --browsers=ChromeHeadless
-
-    - name Upload test results (optional)
-      if always()
-      uses actionsupload-artifact@v4
-      with
-        name karma-results
-        path .coverage
+      - name: Run Angular tests
+        run: npm run test -- --watch=false --browsers=ChromeHeadless
