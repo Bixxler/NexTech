@@ -25,5 +25,9 @@ jobs:
     - name: Build the project
       run: dotnet build
 
-    - name: Run unit tests
-      run: dotnet test NextTech.Tests
+
+    - name: Run Unit Tests
+      run: dotnet test NextTech.Tests --filter "FullyQualifiedName~UnitTest"
+
+    - name: Run Integration Tests
+      run: dotnet test NextTech.Tests --filter "FullyQualifiedName~IntegrationTest"
