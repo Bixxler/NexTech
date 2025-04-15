@@ -25,14 +25,5 @@ jobs:
     - name: Build the project
       run: dotnet build
 
-    - name: Install dependencies
-      run: dotnet restore NextTech.Tests
-      
-    - name: Build the solution
-      run: dotnet build NextTech.Tests
-
     - name: Run Unit Tests
-      run: dotnet test NextTech.Tests --filter "FullyQualifiedName~UnitTest"
-
-    - name: Run Integration Tests
-      run: dotnet test NextTech.Tests --filter "FullyQualifiedName~IntegrationTest"
+      run: dotnet test 
