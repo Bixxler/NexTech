@@ -19,8 +19,14 @@ jobs:
         with:
           node-version: 22.1
 
+      - name: Change to Angular project directory
+        working-directory: ./nexttech.client
+        run: echo "In Angular directory"
+
       - name: Install dependencies
+        working-directory: ./nexttech.client
         run: npm install
 
       - name: Run Angular tests
+        working-directory: ./nexttech.client
         run: npm run test -- --watch=false --browsers=ChromeHeadless
