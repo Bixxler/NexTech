@@ -1,10 +1,10 @@
 
 
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { PageChangedEvent, PaginationModule } from 'ngx-bootstrap/pagination';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { StoryService } from './services/story.service';
 import { Story } from './models/story.model';
 import { HttpClient } from '@angular/common/http';
@@ -26,7 +26,7 @@ import { HttpClient } from '@angular/common/http';
   ]
 })
 
-export class AppComponent {
+export class AppComponent implements OnInit {
   stories:Story[] = [];
   currentPage = 1;
   itemsPerPage = 10; 
@@ -35,6 +35,10 @@ export class AppComponent {
   loading = true;
 
   constructor(private storyService: StoryService, private httpClient: HttpClient) {
+  }
+
+  ngOnInit(): void {
+    // Initialize the component and fetch stories
     this.fetchStories();
   }
 
@@ -70,8 +74,11 @@ export class AppComponent {
   }
   
   onSearchTermChanged(event: any) {
+    // Get the search term from the input field and convert it to lowercase
     this.searchTerm = event.target.value.toLowerCase();
 
+    // Filter stories based on the search term
+    // If search term is empty, show all stories
     if(this.searchTerm !== '') {
       this.filteredStories = this.stories.filter(story => 
         story.title.toLowerCase().includes(this.searchTerm) ||

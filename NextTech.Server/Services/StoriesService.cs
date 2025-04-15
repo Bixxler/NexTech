@@ -21,7 +21,7 @@ namespace NextTech.Server.Services
             {
 
                 // Try to get from cache
-                if (_cache.TryGetValue("latestStories", out List<Story> cachedStories))
+                if (_cache.TryGetValue("cachedStories", out List<Story> cachedStories))
                 {
                         return cachedStories ?? [];
                 }
@@ -57,7 +57,7 @@ namespace NextTech.Server.Services
                     .ToList();
 
                 // Cache it
-                _cache.Set("latestStories", validStories, TimeSpan.FromMinutes(1)); // cache for 1 minute
+                _cache.Set("cachedStories", validStories, TimeSpan.FromMinutes(1)); // cache for 1 minute
 
                 return validStories ?? [];
 

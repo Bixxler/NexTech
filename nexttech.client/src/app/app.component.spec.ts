@@ -92,4 +92,13 @@ describe('AppComponent', () => {
     expect(paginated.length).toBe(10);
     expect(paginated[0].title).toBe('Story 11');
   });
+
+
+  //test to make sure the api service is called when the component is created
+  it('should call fetchStories on init', () => {
+    spyOn(component, 'fetchStories').and.callThrough(); // Spy on fetchStories method
+    fixture.detectChanges(); // Trigger ngOnInit
+
+    expect(component.fetchStories).toHaveBeenCalled(); // Check if fetchStories was called
+  });
 });
