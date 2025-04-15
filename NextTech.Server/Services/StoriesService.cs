@@ -36,7 +36,6 @@ namespace NextTech.Server.Services
                     }
                 }
 
-                // Otherwise fetch
                 //var idsResponse = await _httpClient.GetStringAsync(_newUrlPart);
                 var response = await _httpClient.GetAsync(_newUrlPart);
                 //deserialize the ids
