@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace NextTech.Server.Models
+namespace NexTech.API.Models
 {
     public class Story
     {

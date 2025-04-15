@@ -5,8 +5,9 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NextTech.Server.Models;
-using NextTech.Server.Services;
+using Microsoft.VisualStudio.TestPlatform.TestHost;
+using NexTech.API.Models;
+using NexTech.API.Services;
 using RichardSzalay.MockHttp;
 namespace NextTech.IntegrationTests
 {

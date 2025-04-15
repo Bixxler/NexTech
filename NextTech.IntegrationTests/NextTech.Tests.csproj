@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NextTech.Server\NextTech.Server.csproj" />
+    <ProjectReference Include="..\NexTechAPI\nexTech.API.csproj" />
   </ItemGroup>
 
   <ItemGroup>

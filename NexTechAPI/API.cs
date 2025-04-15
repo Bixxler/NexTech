@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
-using NextTech.Server.Services;
+using NexTech.API.Services;
 using System.Net;
 
 namespace NexTechAPI

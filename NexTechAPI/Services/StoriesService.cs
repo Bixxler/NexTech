@@ -1,13 +1,13 @@
 ﻿using System.Text.Json;
 using Microsoft.Extensions.Caching.Memory;
 using System.Text.RegularExpressions;
-using NextTech.Server.Models;
+using NexTech.API.Models;
 using System.Net.NetworkInformation;
 using System.Data.Common;
 using System;
 using Microsoft.Extensions.Configuration;
 
-namespace NextTech.Server.Services
+namespace NexTech.API.Services
 {
     public interface IStoryService
     {

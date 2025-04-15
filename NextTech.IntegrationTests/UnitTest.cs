@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using Moq.Protected;
 using Moq;
-using NextTech.Server.Models;
-using NextTech.Server.Services;
+using NexTech.API.Models;
+using NexTech.API.Services;
 using System.Text.Json;
 using System.Net;
 using Microsoft.Extensions.Configuration;
