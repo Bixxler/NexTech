@@ -23,23 +23,27 @@ namespace NextTech.Server.Services
                 // Try to get from cache
                 if (_cache.TryGetValue("latestStories", out List<Story> cachedStories))
                 {
-                    if (cachedStories != null && cachedStories.Count != 0)
-                        return cachedStories;
+                        return cachedStories ?? [];
                 }
 
                 // Otherwise fetch
                 var newStoriesUrl = "v0/newstories.json";
                 var idsResponse = await _httpClient.GetStringAsync(newStoriesUrl);
 
+                //deserialize the ids
                 var ids = JsonSerializer.Deserialize<List<int>>(idsResponse);
 
-                if (ids == null || !ids.Any())
-                    return new List<Story>();
+                // Check if ids are null or empty
+                if (ids == null || ids.Count == 0)
+                    return [];
 
+                // perhaps we should limit the number of stories to fetch
                 var tasks = ids.Select(id => GetStoryById(id));
 
+                // Fetch all stories in parallel
                 var stories = await Task.WhenAll(tasks);
 
+                // Check if stories are null or empty
                 var validStories = stories
                     .Where(story => story != null && !string.IsNullOrEmpty(story.Url))
                     .OrderBy(story =>
@@ -47,7 +51,7 @@ namespace NextTech.Server.Services
                         if (string.IsNullOrEmpty(story.Title))
                             return string.Empty;
 
-                        //remove all the non letters from the sort
+                        //remove all the non letters from the sort, this prevents titles like "second story" from being sorted before anything else
                         return Regex.Replace(story.Title, "[^a-zA-Z]", "").ToLower();
                     })
                     .ToList();
@@ -55,7 +59,7 @@ namespace NextTech.Server.Services
                 // Cache it
                 _cache.Set("latestStories", validStories, TimeSpan.FromMinutes(1)); // cache for 1 minute
 
-                return validStories;
+                return validStories ?? [];
 
             }
             catch (Exception ex)
@@ -67,16 +71,26 @@ namespace NextTech.Server.Services
 
         private async Task<Story> GetStoryById(int id)
         {
-            var storyUrl = $"v0/item/{id}.json";
-            var response = await _httpClient.GetAsync(storyUrl);
+            try
+            {
+                var storyUrl = $"v0/item/{id}.json";
+                var response = await _httpClient.GetAsync(storyUrl);
 
-            if (!response.IsSuccessStatusCode)
+                //it's okay if these return null because we filter out null stories later
+                if (!response.IsSuccessStatusCode)
+                    return null;
+
+                var storyResponse = await response.Content.ReadAsStringAsync();
+                var story = JsonSerializer.Deserialize<Story>(storyResponse);
+
+                return story;
+            }
+            catch(Exception ex)
+            {
+                //log the error but don't throw it, we want to continue fetching the other stories
+                Console.WriteLine($"An error occurred while fetching the story with id {id}: {ex.Message}");
                 return null;
-
-            var storyResponse = await response.Content.ReadAsStringAsync();
-            var story = JsonSerializer.Deserialize<Story>(storyResponse);
-
-            return story;
+            }
         }
     }
 }
