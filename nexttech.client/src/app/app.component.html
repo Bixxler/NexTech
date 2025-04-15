@@ -26,8 +26,10 @@
             {{ errorMesssage }}
           </div>
        
-          <div class="loader" style="text-align: center;" *ngIf="loading"></div>
-          <h5 style="text-align: left;">{{loading ? '' : 'Newest Stories'}}</h5>
+          <div class="loader" *ngIf="loading"></div>
+          <div class="typewriter" *ngIf="!loading && !errorMesssage">
+            <h5>Newest Stories</h5>
+          </div>
           <div class="table-responsive">
             <table class="table table-light table-striped table-hover table-bordered datatables mt-3">
               <thead class="">
