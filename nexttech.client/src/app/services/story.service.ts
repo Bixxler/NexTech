@@ -9,7 +9,7 @@ export class StoryService {
     constructor(private http: HttpClient) { }
 
     GetStories(): Observable<Story[]> {
-        return this.http.get<Story[]>(`/stories`)
+        return this.http.get<Story[]>(`/api/stories`)
             .pipe(
                 tap(data => {
                     if (isDevMode())
