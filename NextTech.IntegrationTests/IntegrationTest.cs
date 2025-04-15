@@ -79,15 +79,28 @@ namespace NextTech.IntegrationTests
         public async Task GetStoriesAsync_ThrowsException_WhenApiFailsCompletely()
         {
             // Arrange
-            var client = _factory.CreateClient();
             var mockHttp = new MockHttpMessageHandler();
-            // Mock the newstories response to return an empty list
+
+            // This expects the full URL
             mockHttp.When("https://hacker-news.firebaseio.com/v0/newstories.json")
-                    .Respond("application/json", JsonSerializer.Serialize(new List<int>()));
-            // Act
-            var response = await client.GetAsync("/stories");
-            // Assert
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+                    .Throw(new HttpRequestException("API failure"));
+
+            // Create a HttpClient with the mock handler and set BaseAddress
+            var httpClient = new HttpClient(mockHttp)
+            {
+                BaseAddress = new Uri("https://hacker-news.firebaseio.com/")
+            };
+
+            // Create a MemoryCache that is initially empty
+            var memoryCache = new MemoryCache(new MemoryCacheOptions());
+
+            // Instantiate your service with the mocked HttpClient and MemoryCache
+            var storyService = new StoryService(httpClient, memoryCache);
+
+            // Act & Assert: Since your service wraps exceptions, we check for ApplicationException.
+            var exception = await Assert.ThrowsAsync<ApplicationException>(async () => await storyService.Get());
+            Assert.Contains("Error while fetching stories from the API", exception.Message);
         }
+
     }
 }

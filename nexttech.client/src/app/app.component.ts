@@ -33,6 +33,7 @@ export class AppComponent implements OnInit {
   searchTerm: string = '';
   filteredStories: any[] = [];
   loading = true;
+  errorMesssage: string = '';
 
   constructor(private storyService: StoryService, private httpClient: HttpClient) {
   }
@@ -52,8 +53,11 @@ export class AppComponent implements OnInit {
       },
       error: (error) => 
       {
-        console.error('Error fetching stories:', error);
+        this.stories = []; // Reset stories to an empty array on error
+        this.filteredStories = []; // Reset filteredStories to an empty array on error
         this.loading = false;
+        error.message = error.message;
+        console.error('Error fetching stories:');
       }
      })
   }
@@ -65,11 +69,14 @@ export class AppComponent implements OnInit {
   }
 
   pageChanged(event: any) {
+    console.log('Page changed:', event.page);
+    // Update the current page based on the event emitted by the pagination component
     this.currentPage = event.page;
+    console.log('Current page:', this.currentPage);
   }
 
   pageSizeChanged(event: any) {
-    this.itemsPerPage = +event.target.value;
+    this.itemsPerPage = event.target.value;
     this.currentPage = 1;
   }
   

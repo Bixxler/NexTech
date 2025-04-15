@@ -62,9 +62,19 @@ namespace NextTech.Server.Services
                 return validStories ?? [];
 
             }
+            catch (JsonException ex)
+            {
+                throw new ApplicationException($"An unexpected error occurred while fetching the stories: {ex.Message}", ex);
+            }
+            catch (HttpRequestException ex)
+            {
+                // Log the exception or rethrow with more context if needed
+                throw new ApplicationException("Error while fetching stories from the API.", ex);
+            }
             catch (Exception ex)
             {
-                throw new Exception($"An error occurred while fetching the stories: {ex.Message}");
+                // Log and throw with the message for unexpected errors
+                throw new ApplicationException($"An unexpected error occurred while fetching the stories: {ex.Message}", ex);
             }
         }
 

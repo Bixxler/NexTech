@@ -19,13 +19,26 @@ public class StoriesController : ControllerBase
     [HttpGet(Name = "GetStories")]
     public async Task<IActionResult> Get()
     {
-        var stories = await _storyService.Get();
-
-        if (stories == null)
+        try
         {
-            return NotFound();
-        }
+            var stories = await _storyService.Get();
 
-        return Ok(stories);
+            if (stories == null || !stories.Any())
+            {
+                return NotFound();
+            }
+
+            return Ok(stories);
+        }
+        catch (ApplicationException ex)
+        {
+            // Return a 500 status code with the error message
+            return StatusCode(500, ex.Message);
+        }
+        catch (Exception ex)
+        {
+            // Return a generic 500 status code for unexpected errors
+            return StatusCode(500, "An unexpected error occurred.");
+        }
     }
 }

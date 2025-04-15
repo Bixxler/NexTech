@@ -170,7 +170,7 @@ namespace NextTech.Tests
                 .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
                 .ThrowsAsync(new HttpRequestException("Network error"));
             // Act & Assert
-            await Assert.ThrowsAsync<Exception>(() => _storyService.Get());
+            await Assert.ThrowsAsync<ApplicationException>(() => _storyService.Get());
         }
 
         [Fact]
@@ -186,7 +186,7 @@ namespace NextTech.Tests
                     Content = new StringContent(invalidJson)
                 });
             // Act & Assert
-            await Assert.ThrowsAsync<Exception>(() => _storyService.Get());
+            await Assert.ThrowsAsync<ApplicationException>(() => _storyService.Get());
         }
 
 
@@ -199,7 +199,7 @@ namespace NextTech.Tests
                 .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
                 .ReturnsAsync(new HttpResponseMessage(HttpStatusCode.InternalServerError));
             // Act & Assert
-            await Assert.ThrowsAsync<Exception>(() => _storyService.Get());
+            await Assert.ThrowsAsync<ApplicationException>(() => _storyService.Get());
         }
 
         [Fact]
