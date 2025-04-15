@@ -14,13 +14,12 @@ namespace NexTech.API.Services
         Task<List<Story>> Get();
     }
 
-    public class StoryService(HttpClient httpClient, IMemoryCache cache, IConfiguration configuration) : IStoryService
+    public class StoryService(HttpClient httpClient, IMemoryCache cache) : IStoryService
     {
         private readonly HttpClient _httpClient = httpClient;
         private readonly IMemoryCache _cache = cache;
-        private readonly IConfiguration _configuration = configuration;
-        private readonly string _newUrlPart = configuration["HackerNews:NewStoriesUrl"];
-        private readonly string _storyUrlPart = configuration["HackerNews:StoryUrl"];
+        private readonly string _newUrlPart = "v0/newstories.json";
+        private readonly string _storyUrlPart = "v0/item/{id}.json";
 
         public async Task<List<Story>> Get()
         {

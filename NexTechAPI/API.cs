@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using NexTech.API.Services;
 using System.Net;
 
-namespace NexTechAPI
+namespace nexTech.API
 {
     public class GetStoriesFunction
     {
@@ -18,6 +18,7 @@ namespace NexTechAPI
             _logger = logger;
             _storyService = storyService;
         }
+
         [Function("GetStories")]
         public async Task<HttpResponseData> Run(
              [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "stories")] HttpRequestData req,

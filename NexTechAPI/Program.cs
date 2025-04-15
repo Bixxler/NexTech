@@ -13,9 +13,8 @@ var host = new HostBuilder()
         services.AddHttpClient<IStoryService, StoryService>((serviceProvider, client) =>
         {
             var config = serviceProvider.GetRequiredService<IConfiguration>();
-            var baseUrl = config.GetConnectionString("HackerNewsApi");
 
-            client.BaseAddress = new Uri(baseUrl);
+            client.BaseAddress = new Uri("https://hacker-news.firebaseio.com/");
         });
         services.AddApplicationInsightsTelemetryWorkerService();
         services.ConfigureFunctionsApplicationInsights();
