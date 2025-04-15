@@ -23,7 +23,7 @@ public class StoriesController : ControllerBase
         {
             var stories = await _storyService.Get();
 
-            if (stories == null || !stories.Any())
+            if (stories == null || stories.Count == 0)
             {
                 return NotFound();
             }

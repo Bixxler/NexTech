@@ -6,9 +6,9 @@ namespace NextTech.Server.Models
     {
 
         [JsonPropertyName("title")]
-        public string Title { get; set; }
+        public required string Title { get; set; }
 
         [JsonPropertyName("url")]
-        public string Url { get; set; }
+        public required string Url { get; set; }
     }
 }
