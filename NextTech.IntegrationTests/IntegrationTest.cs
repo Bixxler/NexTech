@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -8,10 +9,9 @@ using NextTech.Server.Services;
 using RichardSzalay.MockHttp;
 namespace NextTech.IntegrationTests
 {
-   public class IntegrationTests: IClassFixture<WebApplicationFactory<Program>>
+    public class IntegrationTests : IClassFixture<WebApplicationFactory<Program>>
     {
         private readonly WebApplicationFactory<Program> _factory;
-
         public IntegrationTests(WebApplicationFactory<Program> factory)
         {
             _factory = factory.WithWebHostBuilder(builder =>
@@ -57,21 +57,37 @@ namespace NextTech.IntegrationTests
             });
         }
 
+
         [Fact]
-        public async Task GetStories_ReturnsMockedData()
+        public async Task GetStoriesEndpoint_ReturnsExpectedStories()
         {
             // Arrange
             var client = _factory.CreateClient();
-
             // Act
             var response = await client.GetAsync("/stories");
             response.EnsureSuccessStatusCode();
-
             var json = await response.Content.ReadAsStringAsync();
-
+            var stories = JsonSerializer.Deserialize<List<Story>>(json);
             // Assert
-            Assert.Contains("First Mock Story", json);
-            Assert.Contains("Second Mock Story", json);
+            Assert.NotNull(stories);
+            Assert.Equal(2, stories.Count);
+            Assert.Contains(stories, s => s.Title == "First Mock Story" && s.Url == "https://example.com/1");
+            Assert.Contains(stories, s => s.Title == "Second Mock Story" && s.Url == "https://example.com/2");
+        }
+
+        [Fact]
+        public async Task GetStoriesAsync_ThrowsException_WhenApiFailsCompletely()
+        {
+            // Arrange
+            var client = _factory.CreateClient();
+            var mockHttp = new MockHttpMessageHandler();
+            // Mock the newstories response to return an empty list
+            mockHttp.When("https://hacker-news.firebaseio.com/v0/newstories.json")
+                    .Respond("application/json", JsonSerializer.Serialize(new List<int>()));
+            // Act
+            var response = await client.GetAsync("/stories");
+            // Assert
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
     }
 }

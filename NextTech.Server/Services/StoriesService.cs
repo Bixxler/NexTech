@@ -23,7 +23,8 @@ namespace NextTech.Server.Services
                 // Try to get from cache
                 if (_cache.TryGetValue("latestStories", out List<Story> cachedStories))
                 {
-                    return cachedStories;
+                    if (cachedStories != null && cachedStories.Count != 0)
+                        return cachedStories;
                 }
 
                 // Otherwise fetch
