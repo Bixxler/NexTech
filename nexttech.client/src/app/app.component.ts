@@ -45,21 +45,27 @@ export class AppComponent implements OnInit {
 
   fetchStories(){
     this.loading = true;
+    this.currentPage = 1; // Set the initial page to 1
     this.storyService.GetStories().subscribe({
       next: (data) => {
         this.stories = data;
         this.filteredStories = data; // Initialize filteredStories with all stories
-        this.loading = false;
+        this.loading = false; // Set loading to false after a delay
+        this.errorMesssage = ''; // Reset error message
       },
       error: (error) => 
       {
         this.stories = []; // Reset stories to an empty array on error
         this.filteredStories = []; // Reset filteredStories to an empty array on error
         this.loading = false;
-        error.message = error.message;
-        console.error('Error fetching stories:');
+        this.errorMesssage = 'Error fetching stories';
+        console.error('Error fetching stories');
       }
      })
+  }
+
+  testError(){
+    this.errorMesssage = 'Error fetching stories';
   }
 
   get paginatedData() {

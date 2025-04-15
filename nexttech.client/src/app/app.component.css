@@ -12,3 +12,21 @@ table.datatables {
     white-space: nowrap;
 }
 
+tbody, td, tfoot, th, thead, tr {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.card{
+    border: none;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+}
+
+/* HTML: <div class="loader"></div> */
+.loader {
+    width: 40px;
+    aspect-ratio: 4;
+    background: radial-gradient(circle closest-side,#000000 90%,#0000) 0/calc(100%/3) 100% space;
+    clip-path: inset(0 100% 0 0);
+    animation: l1 1s steps(4) infinite;
+  }
+  @keyframes l1 {to{clip-path: inset(0 -34% 0 0)}}
