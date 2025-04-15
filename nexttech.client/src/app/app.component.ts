@@ -59,7 +59,7 @@ export class AppComponent implements OnInit {
         this.filteredStories = []; // Reset filteredStories to an empty array on error
         this.loading = false;
         this.errorMesssage = 'Error fetching stories';
-        console.error('Error fetching stories');
+        console.error(error);
       }
      })
   }
