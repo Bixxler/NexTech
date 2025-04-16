@@ -47,6 +47,12 @@
             </table>
           </div>
 
+
+
+        <div class="d-flex justify-content-between align-items-center mt-2 px-2 text-muted small">
+          <div>
+            Page {{ currentPage }} of {{ totalPages }}
+          </div>
           <pagination
           [totalItems]="filteredStories.length"
           [(ngModel)]="currentPage"
@@ -56,6 +62,10 @@
           [boundaryLinks]="true"
           class="d-flex justify-content-center mt-3">
         </pagination>
+          <div>
+            Showing {{ pageStartIndex }} – {{ pageEndIndex }} of {{ filteredStories.length }} rows
+          </div>
+        </div>
       
         </div>
     </div>

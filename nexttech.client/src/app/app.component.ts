@@ -42,6 +42,19 @@ export class AppComponent implements OnInit {
     // Initialize the component and fetch stories
     this.fetchStories();
   }
+  
+  get pageStartIndex(): number {
+    return (this.currentPage - 1) * this.itemsPerPage + 1;
+  }
+  
+  get pageEndIndex(): number {
+    const end = this.currentPage * this.itemsPerPage;
+    return end > this.filteredStories.length ? this.filteredStories.length : end;
+  }
+  
+  get totalPages(): number {
+    return Math.ceil(this.filteredStories.length / this.itemsPerPage);
+  }
 
   fetchStories(){
     this.loading = true;
