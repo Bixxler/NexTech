@@ -21,11 +21,7 @@
         </div>
       </div>
 
-        <div class="card-body" >
-          <div class="alert alert-danger" *ngIf="errorMesssage" role="alert" >
-            {{ errorMesssage }}
-          </div>
-       
+        <div class="card-body" >   
           <div class="loader" *ngIf="loading"></div>
           <div class="typewriter" *ngIf="!loading && !errorMesssage">
             <h5>Newest Stories</h5>

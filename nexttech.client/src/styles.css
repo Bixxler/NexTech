@@ -93,3 +93,139 @@ body {
     }
   }
   
+
+  body {
+    background-color: #041b11; /* matrix-style dark greenish background */
+    color: #e0ffe0; /* light green terminal text */
+    font-family: 'Courier New', Courier, monospace;
+  }
+  
+  /* --- Card Styling --- */
+  .card {
+    background-color: #0f0f0f; /* near black for contrast */
+    border: 1px solid #2eff2e; /* neon green border */
+    box-shadow: 0 0 10px rgba(46, 255, 46, 0.2);
+    color: #e0ffe0;
+  }
+  
+  /* Title Bar */
+  .title-bar h1 {
+    font-family: 'Share Tech Mono', monospace;
+    color: #00ff9f;
+    text-shadow: 0 0 4px #00ff9f;
+  }
+  
+  /* --- Inputs & Selects --- */
+  .form-control,
+  .form-select {
+    background-color: #1e1e1e;
+    border: 1px solid #00ff9f;
+    color: #00ff9f;
+  }
+  
+  .form-control::placeholder {
+    color: #66ffcc;
+    opacity: 0.5;
+  }
+  
+  .form-control:focus,
+  .form-select:focus {
+    box-shadow: 0 0 5px #00ff9f;
+    border-color: #00ff9f;
+    background-color: #222;
+    color: #fff;
+  }
+  
+  /* --- Buttons --- */
+  .btn-secondary {
+    background-color: #111;
+    border: 1px solid #00ff9f;
+    color: #00ff9f;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #00ff9f;
+    color: #000;
+  }
+  
+  /* --- Table --- */
+  .table {
+    background-color: #101010;
+    color: #a0ffa0;
+  }
+  
+  .table th {
+    background-color: #111;
+    color: #2eff2e;
+    border-color: #00ff9f;
+  }
+  
+  .table td {
+    border-color: #2eff2e;
+  }
+  
+  .table-hover tbody tr:hover {
+    background-color: rgba(0, 255, 128, 0.1);
+  }
+  
+  /* --- Pagination --- */
+  .pagination {
+    --bs-pagination-bg: #111;
+    --bs-pagination-color: #00ff9f;
+    --bs-pagination-border-color: #00ff9f;
+    --bs-pagination-hover-bg: #00ff9f;
+    --bs-pagination-hover-color: #000;
+    --bs-pagination-hover-border-color: #00ff9f;
+  }
+  
+  .hacker-title {
+    font-size: 2.5rem;
+    color: #00ff9f;
+    text-shadow:
+      0 0 2px #00ff9f,
+      0 0 5px #00ff9f,
+      0 0 10px #ff00ff,
+      0 0 20px #ff00ff;
+    font-family: 'VT323', monospace;
+  }
+  
+
+  .d-flex.justify-content-between.align-items-center.mt-2.px-2 {
+    background-color: #0d0d0d; /* Dark background */
+    border-top: 1px solid #00ff9f; /* Neon divider */
+    border-bottom: 1px solid #00ff9f;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+  
+  .text-muted.small {
+    color: #88ffcc !important; /* Override default muted with neon-lite */
+    font-family: 'Courier New', Courier, monospace;
+  }
+  
+  .pagination {
+    --bs-pagination-bg: #111;
+    --bs-pagination-color: #00ff9f;
+    --bs-pagination-border-color: #00ff9f;
+    --bs-pagination-hover-bg: #00ff9f;
+    --bs-pagination-hover-color: #000;
+    --bs-pagination-hover-border-color: #00ff9f;
+  
+    margin: 0;
+    padding: 0.25rem;
+  }
+  
+  .pagination .page-link {
+    background-color: #111;
+    border-color: #00ff9f;
+    color: #00ff9f;
+  }
+  
+  .pagination .page-link:hover {
+    background-color: #00ff9f;
+    color: #000;
+  }
+
+  .text-muted.small:hover {
+    text-shadow: 0 0 3px #00ff9f;
+  }
