@@ -5,7 +5,6 @@ using NexTech.API.Models;
 using NexTech.API.Services;
 using System.Text.Json;
 using System.Net;
-using Microsoft.Extensions.Configuration;
 
 namespace NextTech.Tests
 {
@@ -114,7 +113,6 @@ namespace NextTech.Tests
             Assert.Empty(result);  // Should return an empty list when no story IDs
         }
 
-        //more unit tests
         [Fact]
         public async Task GetStoriesAsync_ReturnsStories_WhenValidDataIsReturned()
         {
@@ -159,7 +157,6 @@ namespace NextTech.Tests
             // Assert
             Assert.NotNull(result);
             Assert.Equal(2, result.Count());
-
         }
 
         [Fact]
