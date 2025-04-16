@@ -9,7 +9,8 @@ export class StoryService {
     constructor(private http: HttpClient) { }
 
     GetStories(): Observable<Story[]> {
-        return this.http.get<Story[]>(`/api/stories`)
+        let string = isDevMode() ? 'http://localhost:7236/api/stories' : '/api/stories'
+        return this.http.get<Story[]>(string)
             .pipe(
                 tap(data => {
                     if (isDevMode())

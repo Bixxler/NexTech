@@ -34,8 +34,7 @@ namespace NextTech.Tests
                 BaseAddress = new Uri("https://hacker-news.firebaseio.com/")
             };
 
-            var memoryCache = new MemoryCache(new MemoryCacheOptions());
-            var storyService = new StoryService(httpClient, memoryCache);
+            var storyService = new StoryService(httpClient);
 
             // Act
             var result = await storyService.Get();
@@ -66,8 +65,7 @@ namespace NextTech.Tests
                 BaseAddress = new Uri("https://hacker-news.firebaseio.com/")
             };
 
-            var memoryCache = new MemoryCache(new MemoryCacheOptions());
-            var storyService = new StoryService(httpClient, memoryCache);
+            var storyService = new StoryService(httpClient);
 
             // First call - populates the cache
             var firstCall = await storyService.Get();
@@ -107,8 +105,7 @@ namespace NextTech.Tests
                 BaseAddress = new Uri("https://hacker-news.firebaseio.com/")
             };
 
-            var memoryCache = new MemoryCache(new MemoryCacheOptions());
-            var storyService = new StoryService(httpClient, memoryCache);
+            var storyService = new StoryService(httpClient);
 
             // Act
             var stories = await storyService.Get();
@@ -136,11 +133,8 @@ namespace NextTech.Tests
                 BaseAddress = new Uri("https://hacker-news.firebaseio.com/")
             };
 
-            // Create a MemoryCache that is initially empty
-            var memoryCache = new MemoryCache(new MemoryCacheOptions());
-
             // Instantiate service with the mocked HttpClient and MemoryCache
-            var storyService = new StoryService(httpClient, memoryCache);
+            var storyService = new StoryService(httpClient);
 
             // Act & Assert: Since service wraps exceptions, we check for ApplicationException.
             var exception = await Assert.ThrowsAsync<ApplicationException>(async () => await storyService.Get());

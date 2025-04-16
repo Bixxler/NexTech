@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NexTech.API\nexTech.API.csproj" />
-    <ProjectReference Include="..\NexTechAPI\nexTech.API.csproj" />
   </ItemGroup>
 
   <ItemGroup>
