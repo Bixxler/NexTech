@@ -59,7 +59,6 @@ export class AppComponent implements OnInit {
         this.filteredStories = []; // Reset filteredStories to an empty array on error
         this.loading = false;
         this.errorMesssage = 'Error fetching stories';
-        console.error(error);
       }
      })
   }
@@ -75,10 +74,8 @@ export class AppComponent implements OnInit {
   }
 
   pageChanged(event: any) {
-    console.log('Page changed:', event.page);
     // Update the current page based on the event emitted by the pagination component
     this.currentPage = event.page;
-    console.log('Current page:', this.currentPage);
   }
 
   pageSizeChanged(event: any) {
