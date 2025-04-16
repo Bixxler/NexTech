@@ -78,7 +78,7 @@ describe('AppComponent', () => {
     //     story.title.toLowerCase().includes(this.searchTerm) ||
     //     story.url.toLowerCase().includes(this.searchTerm)
     //   );
-    
+
     //   this.currentPage = 1; // reset back to first page
     // }
     // else{
@@ -126,7 +126,4 @@ describe('AppComponent', () => {
     expect(paginated.length).toBe(10);
     expect(paginated[0].title).toBe('Story 11');
   });
-
-
-
 });

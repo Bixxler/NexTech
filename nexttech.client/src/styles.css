@@ -1,5 +1,55 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'bootstrap/dist/css/bootstrap.min.css';
+
+:host {
+  max-width: 1280px;
+  padding: 2rem;
+  text-align: center;
+}
+
+table.datatables {
+  table-layout: fixed !important;
+  border-collapse: collapse !important;
+  transition: transform 2s ease-in-out;
+  text-align: left;
+  white-space: nowrap;
+}
+
+tbody, td, tfoot, th, thead, tr {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.card{
+  border: none;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+}
+
+/* HTML: <div class="loader"></div> */
+.loader {
+  width: 40px;
+  aspect-ratio: 4;
+  background: radial-gradient(circle closest-side,#ffffff 90%,#fffdfdf5) 0/calc(100%/3) 100% space;
+  clip-path: inset(0 100% 0 0);
+  animation: l1 1s steps(4) infinite;
+}
+@keyframes l1 {to{clip-path: inset(0 -34% 0 0)}}
+
+.typewriter h5 {
+  text-align: left;
+}
+
+/* The typing effect */
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+/* The typewriter cursor effect */
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: white; }
+}
+
 body {
   background-color: #000000;
   color: #e0e0e0;
