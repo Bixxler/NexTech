@@ -2,9 +2,9 @@ name: Angular Tests
 
 on:
   push:
-    branches: [toFunctionApp]
+    branches: [ToFunctionApp]
   pull_request:
-    branches: [toFunctionApp]
+    branches: [ToFunctionApp]
 
 jobs:
   test:
