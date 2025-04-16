@@ -14,10 +14,10 @@ namespace NexTech.API.Services
         Task<List<Story>> Get();
     }
 
-    public class StoryService(HttpClient httpClient, IMemoryCache cache) : IStoryService
+    public class StoryService(HttpClient httpClient) : IStoryService
     {
         private readonly HttpClient _httpClient = httpClient;
-        private readonly IMemoryCache _cache = cache;
+        //private readonly IMemoryCache _cache = cache;
         private readonly string _newUrlPart = "v0/newstories.json";
         private readonly string _storyUrlPart = "v0/item/{id}.json";
 
@@ -27,14 +27,14 @@ namespace NexTech.API.Services
             {
                 //doing pagination here would probably be worth it if there where thousands of results. But the current result set is around 500 so the paging is much faster if kept on client side
 
-                // Try to get from cache
-                if (_cache.TryGetValue("cachedStories", out List<Story>? cachedStories))
-                {
-                    if(cachedStories != null && cachedStories.Count > 0)
-                    {
-                        return cachedStories;
-                    }
-                }
+                // no longer using memory cache since it does not work with azure functions
+                //if (_cache.TryGetValue("cachedStories", out List<Story>? cachedStories))
+                //{
+                //    if(cachedStories != null && cachedStories.Count > 0)
+                //    {
+                //        return cachedStories;
+                //    }
+                //}
 
                 //var idsResponse = await _httpClient.GetStringAsync(_newUrlPart);
                 var response = await _httpClient.GetAsync(_newUrlPart);
@@ -78,7 +78,7 @@ namespace NexTech.API.Services
                     .ToList();
 
                 // Cache it
-                _cache.Set("cachedStories", validStories, TimeSpan.FromMinutes(5)); // cache for 5 minutes?
+                //_cache.Set("cachedStories", validStories, TimeSpan.FromMinutes(5)); // cache for 5 minutes?
 
                 return validStories ?? [];
 

@@ -10,12 +10,10 @@ namespace nexTech.API
 {
     public class GetStoriesFunction
     {
-        private readonly ILogger<GetStoriesFunction> _logger;
         private readonly IStoryService _storyService;
 
-        public GetStoriesFunction(ILogger<GetStoriesFunction> logger, IStoryService storyService)
+        public GetStoriesFunction(IStoryService storyService)
         {
-            _logger = logger;
             _storyService = storyService;
         }
 
