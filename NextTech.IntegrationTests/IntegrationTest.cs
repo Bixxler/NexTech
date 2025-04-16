@@ -1,14 +1,12 @@
-using System;
-using System.Net;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
+using RichardSzalay.MockHttp;
 using NexTech.API.Models;
 using NexTech.API.Services;
-using RichardSzalay.MockHttp;
 namespace NextTech.IntegrationTests
 {
     public class IntegrationTests : IClassFixture<WebApplicationFactory<Program>>

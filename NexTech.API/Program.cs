@@ -4,12 +4,21 @@ using Microsoft.Extensions.DependencyInjection;
 using NexTech.API.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
+using Google.Protobuf.WellKnownTypes;
 
 
 var host = new HostBuilder()
     .ConfigureFunctionsWebApplication()
     .ConfigureServices(services => {
         services.AddMemoryCache();
+        services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAll", builder =>
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader());
+        });
+
         services.AddHttpClient<IStoryService, StoryService>((serviceProvider, client) =>
         {
             var config = serviceProvider.GetRequiredService<IConfiguration>();
