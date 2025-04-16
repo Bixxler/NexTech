@@ -11,9 +11,9 @@ namespace nexTech.API
     public class GetStoriesFunction
     {
         private readonly IStoryService _storyService;
-        private readonly ILogger _logger;
+        private readonly ILogger<GetStoriesFunction> _logger;
 
-        public GetStoriesFunction(IStoryService storyService, ILogger logger)
+        public GetStoriesFunction(IStoryService storyService, ILogger<GetStoriesFunction> logger)
         {
             _storyService = storyService;
             _logger = logger;
@@ -24,8 +24,13 @@ namespace nexTech.API
              [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "stories")] HttpRequestData req,
              FunctionContext context)
         {
+            var logger = context.GetLogger("GetStories");
+            //This creates a new logger instance specifically tied to the Azure Function's execution context, labeled "GetStories" in logs.
+            //reverted back to this after further reading on how this would be useful over just using _logger
+
             try
             {
+
                 var stories = await _storyService.Get();
 
                 if (stories == null || stories.Count == 0)
@@ -42,14 +47,14 @@ namespace nexTech.API
             }
             catch (ApplicationException ex)
             {
-                _logger.LogError(ex, "Application error while retrieving stories.");
+                logger.LogError(ex, "Application error while retrieving stories.");
                 var errorResponse = req.CreateResponse(HttpStatusCode.InternalServerError);
                 await errorResponse.WriteStringAsync(ex.Message);
                 return errorResponse;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Unexpected error while retrieving stories.");
+                logger.LogError(ex, "Unexpected error while retrieving stories.");
                 var errorResponse = req.CreateResponse(HttpStatusCode.InternalServerError);
                 await errorResponse.WriteStringAsync("An unexpected error occurred.");
                 return errorResponse;
