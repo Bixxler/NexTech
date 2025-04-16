@@ -42,7 +42,7 @@ export class AppComponent implements OnInit {
     // Initialize the component and fetch stories
     this.fetchStories();
   }
-  
+
   get pageStartIndex(): number {
     return (this.currentPage - 1) * this.itemsPerPage + 1;
   }

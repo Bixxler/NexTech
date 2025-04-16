@@ -229,3 +229,57 @@ body {
   .text-muted.small:hover {
     text-shadow: 0 0 3px #00ff9f;
   }
+
+.table {
+  background-color: #121212 !important;
+  color: #e0e0e0 !important;
+  border-color: #333 !important;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+/* Header row styling */
+.table thead {
+  background-color: #1a1a1a !important;
+  color: #00ff9f !important;
+  border-bottom: 2px solid #00ff9f;
+}
+
+/* Header cell */
+.table thead th {
+  border-color: #333 !important;
+}
+
+/* Body rows */
+.table tbody tr {
+  background-color: #121212 !important;
+  transition: background-color 0.2s ease;
+}
+
+/* Hover effect */
+.table tbody tr:hover {
+  background-color: #1c1c1c !important;
+}
+
+/* Table cell borders */
+.table td, .table th {
+  border-color: #333 !important;
+}
+
+/* Title column */
+.table td:first-child {
+  color: #88ffcc;
+  font-weight: bold;
+}
+
+/* URL column with dark style hyperlink */
+.table td:last-child a {
+  color: #00ffff;
+  text-decoration: none;
+  word-break: break-word;
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.table td:last-child a:hover {
+  color: #00ff9f;
+  text-shadow: 0 0 4px #00ff9f;
+}
