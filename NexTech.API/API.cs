@@ -11,10 +11,12 @@ namespace nexTech.API
     public class GetStoriesFunction
     {
         private readonly IStoryService _storyService;
+        private readonly ILogger _logger;
 
-        public GetStoriesFunction(IStoryService storyService)
+        public GetStoriesFunction(IStoryService storyService, ILogger logger)
         {
             _storyService = storyService;
+            _logger = logger;
         }
 
         [Function("GetStories")]
@@ -22,8 +24,6 @@ namespace nexTech.API
              [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "stories")] HttpRequestData req,
              FunctionContext context)
         {
-            var logger = context.GetLogger("GetStories");
-
             try
             {
                 var stories = await _storyService.Get();
@@ -42,14 +42,14 @@ namespace nexTech.API
             }
             catch (ApplicationException ex)
             {
-                logger.LogError(ex, "Application error while retrieving stories.");
+                _logger.LogError(ex, "Application error while retrieving stories.");
                 var errorResponse = req.CreateResponse(HttpStatusCode.InternalServerError);
                 await errorResponse.WriteStringAsync(ex.Message);
                 return errorResponse;
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Unexpected error while retrieving stories.");
+                _logger.LogError(ex, "Unexpected error while retrieving stories.");
                 var errorResponse = req.CreateResponse(HttpStatusCode.InternalServerError);
                 await errorResponse.WriteStringAsync("An unexpected error occurred.");
                 return errorResponse;
