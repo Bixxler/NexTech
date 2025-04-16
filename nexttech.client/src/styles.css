@@ -1,12 +1,95 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'bootstrap/dist/css/bootstrap.min.css';
 body {
-    background-color: #262637e0;
-    color: #e0e0e0;
+  background-color: #000000;
+  color: #e0e0e0;
     font-family: 'Segoe UI', sans-serif;
   }
   
-  h1{
-    color:white !important;
+  .hacker-title {
+    position: relative;
+    color: #00ff00;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 2.5rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-shadow: 0 0 2px #00ff00;
+    animation: glitch-animation 1s infinite;
+  }
+  
+  .hacker-title::before,
+  .hacker-title::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    color: #00ff00;
+    background: transparent;
+    clip: rect(0, 900px, 0, 0);
+  }
+  
+  .hacker-title::before {
+    animation: glitch-anim-before 2s infinite linear alternate-reverse;
+    color: #ff00ff; /* magenta glitch line */
+  }
+  
+  .hacker-title::after {
+    animation: glitch-anim-after 2s infinite linear alternate-reverse;
+    color: #00ffff; /* cyan glitch line */
+  }
+  
+  @keyframes glitch-anim-before {
+    0% {
+      clip: rect(0, 9999px, 0, 0);
+      transform: translate(0, 0);
+    }
+    20% {
+      clip: rect(5px, 9999px, 30px, 0);
+      transform: translate(-2px, -2px);
+    }
+    40% {
+      clip: rect(10px, 9999px, 40px, 0);
+      transform: translate(2px, -1px);
+    }
+    60% {
+      clip: rect(15px, 9999px, 45px, 0);
+      transform: translate(-1px, 1px);
+    }
+    80% {
+      clip: rect(20px, 9999px, 50px, 0);
+      transform: translate(1px, -2px);
+    }
+    100% {
+      clip: rect(0, 9999px, 0, 0);
+      transform: translate(0, 0);
+    }
+  }
+  
+  @keyframes glitch-anim-after {
+    0% {
+      clip: rect(0, 9999px, 0, 0);
+      transform: translate(0, 0);
+    }
+    20% {
+      clip: rect(10px, 9999px, 35px, 0);
+      transform: translate(2px, 1px);
+    }
+    40% {
+      clip: rect(20px, 9999px, 50px, 0);
+      transform: translate(-2px, 2px);
+    }
+    60% {
+      clip: rect(25px, 9999px, 55px, 0);
+      transform: translate(2px, -1px);
+    }
+    80% {
+      clip: rect(30px, 9999px, 60px, 0);
+      transform: translate(-1px, -2px);
+    }
+    100% {
+      clip: rect(0, 9999px, 0, 0);
+      transform: translate(0, 0);
+    }
   }
   
