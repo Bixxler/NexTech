@@ -214,6 +214,24 @@ body {
     margin: 0;
     padding: 0.25rem;
   }
+
+  .page-item.active a,
+.page-item.active span {
+  background-color: #00ff9f;
+  color: #121212;
+  font-weight: bold;
+  border-color: #00ff9f;
+}
+
+/* Disabled (like prev/next when on first/last) */
+.page-item.disabled a,
+.page-item.disabled span {
+  background-color: #1a1a1a;
+  color: #555;
+  border-color: #333;
+  pointer-events: none;
+  opacity: 0.5;
+}
   
   .pagination .page-link {
     background-color: #111;
