@@ -9,6 +9,7 @@
             <input type="text" name="searchTerm" class="form-control" placeholder="Search..."  (input)="onSearchTermChanged($event)"/>
           </div>
           <div class="flex-grow-1"></div>
+          <button class="btn btn-secondary" style="margin-right:.5em" (click)="fetchStories()">&#x21bb;</button>
           <div class="flex-shrink-0 d-flex">
             <select name="pageSize" class="form-select" (change)="pageSizeChanged($event)" [ariaPlaceholder]="'Page Size'">
               <option [ngValue]="10">10</option>

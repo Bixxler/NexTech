@@ -37,6 +37,8 @@ namespace nexTech.API
                 }
 
                 var okResponse = req.CreateResponse(HttpStatusCode.OK);
+                okResponse.Headers.Add("Cache-Control", "public, max-age=300");
+
                 await okResponse.WriteAsJsonAsync(stories);
                 return okResponse;
             }
