@@ -58,77 +58,6 @@ namespace NexTech.API.Services
                 return _cachedStories;
             }
 
-            catch(Exception ex)
-            {
-                throw new ApplicationException("Error while fetching stories from the API.", ex);
-            }
-
-        }
-
-        public async Task<List<Story>> FetchStoriesAsync()
-        {
-            try
-            {
-                //doing pagination here would probably be worth it if there where thousands of results. But the current result set is around 500 so the paging is much faster if kept on client side
-
-                // no longer using memory cache since it does not work with azure functions
-                //if (_cache.TryGetValue("cachedStories", out List<Story>? cachedStories))
-                //{
-                //    if(cachedStories != null && cachedStories.Count > 0)
-                //    {
-                //        return cachedStories;
-                //    }
-                //}
-
-                //var idsResponse = await _httpClient.GetStringAsync(_newUrlPart);
-                var response = await _httpClient.GetAsync(_newUrlPart);
-                //deserialize the ids
-                await using var stream = await response.Content.ReadAsStreamAsync();
-
-
-                var ids = JsonSerializer.Deserialize<List<int>>(stream);
-
-                //var ids = await JsonSerializer.DeserializeAsync<List<int>>(idsResponse);
-                // Check if ids are null or empty
-                if (ids == null || ids.Count == 0)
-                    return [];
-
-                // perhaps we should limit the number of stories to fetch
-                var tasks = ids.Select(id => GetStoryById(id));
-
-                // Fetch all stories in parallel
-                var stories = await Task.WhenAll(tasks);
-
-                // was doing it this way but it's very inefficient having to Regex.Replace every loop
-                //var validStories = stories
-                //    .Where(story => story != null && !string.IsNullOrEmpty(story.Url) && !string.IsNullOrEmpty(story.Title))
-                //    .OrderBy(story =>
-                //    {
-                //        //remove all the non letters from the sort, this prevents titles like "second story" from being sorted before anything else
-                //        return Regex.Replace(story.Title, "[^a-zA-Z]", "").ToLower();
-                //    })
-                //    .ToList();
-
-                var validStories = stories
-                    .Where(story => story != null && !string.IsNullOrEmpty(story.Url) && !string.IsNullOrEmpty(story.Title)).OrderBy(story => story.Title)
-                    //.Select(story => new
-                    //{
-                    //    Story = story,
-                    //    //store the cleaned titles in CleanTitle var then order by that,
-                    //    //remove all the non letters from the sort,
-                    //    //this prevents titles like "second story" from being sorted before anything else
-                    //    //CleanTitle = new string(story.Title.Where(char.IsLetter).ToArray()).ToLower()
-                    //})
-                    //.OrderBy(x => x.Story.Title)
-                    //.Select(x => x.Story)
-                    .ToList();
-
-                // Cache it
-                //_cache.Set("cachedStories", validStories, TimeSpan.FromMinutes(5)); // cache for 5 minutes?
-
-                return validStories ?? [];
-
-            }
             catch (JsonException ex)
             {
                 throw new ApplicationException($"An unexpected error occurred while fetching the stories: {ex.Message}", ex);
@@ -143,6 +72,68 @@ namespace NexTech.API.Services
                 // Log and throw with the message for unexpected errors
                 throw new ApplicationException($"An unexpected error occurred while fetching the stories: {ex.Message}", ex);
             }
+        }
+
+        public async Task<List<Story>> FetchStoriesAsync()
+        {
+            //doing pagination here would probably be worth it if there where thousands of results. But the current result set is around 500 so the paging is much faster if kept on client side
+
+            // no longer using memory cache since it does not work with azure functions
+            //if (_cache.TryGetValue("cachedStories", out List<Story>? cachedStories))
+            //{
+            //    if(cachedStories != null && cachedStories.Count > 0)
+            //    {
+            //        return cachedStories;
+            //    }
+            //}
+
+            //var idsResponse = await _httpClient.GetStringAsync(_newUrlPart);
+            var response = await _httpClient.GetAsync(_newUrlPart);
+            //deserialize the ids
+            await using var stream = await response.Content.ReadAsStreamAsync();
+
+
+            var ids = JsonSerializer.Deserialize<List<int>>(stream);
+
+            //var ids = await JsonSerializer.DeserializeAsync<List<int>>(idsResponse);
+            // Check if ids are null or empty
+            if (ids == null || ids.Count == 0)
+                return [];
+
+            // perhaps we should limit the number of stories to fetch
+            var tasks = ids.Select(id => GetStoryById(id));
+
+            // Fetch all stories in parallel
+            var stories = await Task.WhenAll(tasks);
+
+            // was doing it this way but it's very inefficient having to Regex.Replace every loop
+            //var validStories = stories
+            //    .Where(story => story != null && !string.IsNullOrEmpty(story.Url) && !string.IsNullOrEmpty(story.Title))
+            //    .OrderBy(story =>
+            //    {
+            //        //remove all the non letters from the sort, this prevents titles like "second story" from being sorted before anything else
+            //        return Regex.Replace(story.Title, "[^a-zA-Z]", "").ToLower();
+            //    })
+            //    .ToList();
+
+            var validStories = stories
+                .Where(story => story != null && !string.IsNullOrEmpty(story.Url) && !string.IsNullOrEmpty(story.Title)).OrderBy(story => story.Title)
+                //.Select(story => new
+                //{
+                //    Story = story,
+                //    //store the cleaned titles in CleanTitle var then order by that,
+                //    //remove all the non letters from the sort,
+                //    //this prevents titles like "second story" from being sorted before anything else
+                //    //CleanTitle = new string(story.Title.Where(char.IsLetter).ToArray()).ToLower()
+                //})
+                //.OrderBy(x => x.Story.Title)
+                //.Select(x => x.Story)
+                .ToList();
+
+            // Cache it
+            //_cache.Set("cachedStories", validStories, TimeSpan.FromMinutes(5)); // cache for 5 minutes?
+
+            return validStories ?? [];
         }
 
         private async Task<Story> GetStoryById(int id)
