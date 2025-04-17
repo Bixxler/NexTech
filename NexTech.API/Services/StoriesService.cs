@@ -1,11 +1,5 @@
 ﻿using System.Text.Json;
-using Microsoft.Extensions.Caching.Memory;
-using System.Text.RegularExpressions;
 using NexTech.API.Models;
-using System.Net.NetworkInformation;
-using System.Data.Common;
-using System;
-using Microsoft.Extensions.Configuration;
 
 namespace NexTech.API.Services
 {
@@ -21,7 +15,48 @@ namespace NexTech.API.Services
         private readonly string _newUrlPart = "v0/newstories.json";
         private readonly string _storyUrlPart = "v0/item/{id}.json";
 
+        private static List<Story>? _cachedStories;
+        private static DateTime _cacheTime;
+        private static readonly TimeSpan _cacheDuration = TimeSpan.FromMinutes(5);
+        private static Task? _refreshTask;
+
+        //Stale-while-revalidate technique
         public async Task<List<Story>> Get()
+        {
+            // If cache is still fresh, return it
+            if (_cachedStories != null && DateTime.UtcNow - _cacheTime < _cacheDuration)
+            {
+                return _cachedStories;
+            }
+
+            // If cache is stale but exists, return stale and refresh in background
+            if (_cachedStories != null)
+            {
+                // only one refresh task at a time
+                if (_refreshTask == null || _refreshTask.IsCompleted)
+                {
+                    _refreshTask = Task.Run(async () =>
+                    {
+                        var fresh = await FetchStoriesAsync();
+                        if (fresh != null && fresh.Count > 0)
+                        {
+                            _cachedStories = fresh;
+                            _cacheTime = DateTime.UtcNow;
+                        }
+                    });
+                }
+
+                // Serve stale cache immediately
+                return _cachedStories;
+            }
+
+            // If no cache at all, do a full fetch and return
+            _cachedStories = await FetchStoriesAsync();
+            _cacheTime = DateTime.UtcNow;
+            return _cachedStories;
+        }
+
+        public async Task<List<Story>> FetchStoriesAsync()
         {
             try
             {
@@ -40,6 +75,8 @@ namespace NexTech.API.Services
                 var response = await _httpClient.GetAsync(_newUrlPart);
                 //deserialize the ids
                 await using var stream = await response.Content.ReadAsStreamAsync();
+
+
                 var ids = JsonSerializer.Deserialize<List<int>>(stream);
 
                 //var ids = await JsonSerializer.DeserializeAsync<List<int>>(idsResponse);
@@ -64,17 +101,17 @@ namespace NexTech.API.Services
                 //    .ToList();
 
                 var validStories = stories
-                    .Where(story => story != null && !string.IsNullOrEmpty(story.Url) && !string.IsNullOrEmpty(story.Title))
-                    .Select(story => new
-                    {
-                        Story = story,
-                        //store the cleaned titles in CleanTitle var then order by that,
-                        //remove all the non letters from the sort,
-                        //this prevents titles like "second story" from being sorted before anything else
-                        CleanTitle = new string(story.Title.Where(char.IsLetter).ToArray()).ToLower()
-                    })
-                    .OrderBy(x => x.CleanTitle)
-                    .Select(x => x.Story)
+                    .Where(story => story != null && !string.IsNullOrEmpty(story.Url) && !string.IsNullOrEmpty(story.Title)).OrderBy(story => story.Title)
+                    //.Select(story => new
+                    //{
+                    //    Story = story,
+                    //    //store the cleaned titles in CleanTitle var then order by that,
+                    //    //remove all the non letters from the sort,
+                    //    //this prevents titles like "second story" from being sorted before anything else
+                    //    //CleanTitle = new string(story.Title.Where(char.IsLetter).ToArray()).ToLower()
+                    //})
+                    //.OrderBy(x => x.Story.Title)
+                    //.Select(x => x.Story)
                     .ToList();
 
                 // Cache it
@@ -110,6 +147,12 @@ namespace NexTech.API.Services
                     return null;
 
                 await using var stream = await response.Content.ReadAsStreamAsync();
+
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+
                 var story = await JsonSerializer.DeserializeAsync<Story>(stream);
 
                 return story;

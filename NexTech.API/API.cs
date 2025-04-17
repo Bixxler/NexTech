@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
@@ -30,7 +29,6 @@ namespace nexTech.API
 
             try
             {
-
                 var stories = await _storyService.Get();
 
                 if (stories == null || stories.Count == 0)
@@ -41,7 +39,8 @@ namespace nexTech.API
 
                 var okResponse = req.CreateResponse(HttpStatusCode.OK);
                 
-                okResponse.Headers.Add("Cache-Control", "public, max-age=300");
+                //okResponse.Headers.Add("Cache-Control", "public, max-age=300");
+                okResponse.Headers.Add("Cache-Control", "public, max-age=60, stale-while-revalidate=240");
 
                 await okResponse.WriteAsJsonAsync(stories);
                 return okResponse;
