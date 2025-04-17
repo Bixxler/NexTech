@@ -23,37 +23,46 @@ namespace NexTech.API.Services
         //Stale-while-revalidate technique
         public async Task<List<Story>> Get()
         {
-            // If cache is still fresh, return it
-            if (_cachedStories != null && DateTime.UtcNow - _cacheTime < _cacheDuration)
+            try
             {
-                return _cachedStories;
-            }
-
-            // If cache is stale but exists, return stale and refresh in background
-            if (_cachedStories != null)
-            {
-                // only one refresh task at a time
-                if (_refreshTask == null || _refreshTask.IsCompleted)
+                // If cache is still fresh, return it
+                if (_cachedStories != null && DateTime.UtcNow - _cacheTime < _cacheDuration)
                 {
-                    _refreshTask = Task.Run(async () =>
-                    {
-                        var fresh = await FetchStoriesAsync();
-                        if (fresh != null && fresh.Count > 0)
-                        {
-                            _cachedStories = fresh;
-                            _cacheTime = DateTime.UtcNow;
-                        }
-                    });
+                    return _cachedStories;
                 }
 
-                // Serve stale cache immediately
+                // If cache is stale but exists, return stale and refresh in background
+                if (_cachedStories != null)
+                {
+                    // only one refresh task at a time
+                    if (_refreshTask == null || _refreshTask.IsCompleted)
+                    {
+                        _refreshTask = Task.Run(async () =>
+                        {
+                            var fresh = await FetchStoriesAsync();
+                            if (fresh != null && fresh.Count > 0)
+                            {
+                                _cachedStories = fresh;
+                                _cacheTime = DateTime.UtcNow;
+                            }
+                        });
+                    }
+
+                    // Serve stale cache immediately
+                    return _cachedStories;
+                }
+
+                // If no cache at all, do a full fetch and return
+                _cachedStories = await FetchStoriesAsync();
+                _cacheTime = DateTime.UtcNow;
                 return _cachedStories;
             }
 
-            // If no cache at all, do a full fetch and return
-            _cachedStories = await FetchStoriesAsync();
-            _cacheTime = DateTime.UtcNow;
-            return _cachedStories;
+            catch(Exception ex)
+            {
+                throw new ApplicationException("Error while fetching stories from the API.", ex);
+            }
+
         }
 
         public async Task<List<Story>> FetchStoriesAsync()
