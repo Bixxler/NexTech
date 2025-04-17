@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using Microsoft.AspNetCore.Http;
 using NexTech.API.Models;
 
 namespace NexTech.API.Services
@@ -39,11 +40,17 @@ namespace NexTech.API.Services
                     {
                         _refreshTask = Task.Run(async () =>
                         {
-                            var fresh = await FetchStoriesAsync();
-                            if (fresh != null && fresh.Count > 0)
+                            try
                             {
-                                _cachedStories = fresh;
-                                _cacheTime = DateTime.UtcNow;
+                                var fresh = await FetchStoriesAsync();
+                                if (fresh != null && fresh.Count > 0)
+                                {
+                                    _cachedStories = fresh;
+                                    _cacheTime = DateTime.UtcNow;
+                                }
+                            }
+                            catch (Exception ex) {
+                                Console.WriteLine($"Background refresh failed: {ex.Message}");
                             }
                         });
                     }

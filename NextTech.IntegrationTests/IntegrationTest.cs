@@ -1,5 +1,4 @@
 using System.Text.Json;
-using Microsoft.Extensions.Caching.Memory;
 using RichardSzalay.MockHttp;
 using NexTech.API.Models;
 using NexTech.API.Services;
